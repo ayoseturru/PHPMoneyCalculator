@@ -1,0 +1,17 @@
+fieldset {
+    width: 10%;
+}
+
+select[name = "from"]{
+    margin-bottom: 15px;
+    float: left;
+    width: auto;
+}
+
+select[name = "to"] {
+    float: right;
+}
+
+form p {
+    clear: both;
+}
