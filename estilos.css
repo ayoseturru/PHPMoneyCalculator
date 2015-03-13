@@ -1,15 +1,24 @@
+body {
+    background-color:  	#E0E0E0;
+}
+
 fieldset {
-    width: 10%;
+    width: 30%;
+}
+
+select, input {
+    border: 2px solid black;    
+}
+
+a:hover {
+    color: black;
 }
 
 select[name = "from"]{
     margin-bottom: 15px;
+    margin-right: 8%;
     float: left;
     width: auto;
-}
-
-select[name = "to"] {
-    float: right;
 }
 
 form p {
@@ -30,4 +39,54 @@ h1 {
     font-size: xx-large;
     text-align: center;
     color: blue;
+    text-transform: uppercase;
+}
+
+form {
+    padding-left: 40%;
+}
+
+fieldset {
+    border: 2px solid black;
+}
+
+img {
+    margin-top: 10px;
+    width: 20%;
+    padding-left: 40%;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+table, td, th {
+    margin-top: 10px;
+    border: 2px solid black;
+}
+
+#tabla {
+    text-align: left;
+}
+
+a + p {
+    font-weight: bold;
+    font-size: large;
+    text-align: center;
+}
+
+div[class="resultado"] p {
+    display: inherit;
+    text-align: center;
+    width: auto;
+}
+.resultado {
+    margin-top: 10px;
+    border: 3px solid blue;
+    font-weight: bold;
+    position: relative;
+    left: 40%;
+    width: 20%;
 }

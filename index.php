@@ -38,10 +38,10 @@ function formularioConversor() {
 function intentosPrevios() {
     switch (filter_input(INPUT_GET, 'cambio')) {
         case '1':
-            echo '<div class="aviso"><p>Por favor, asegúrese de haber seleccionado un origen y un destino para realziar el cambio, además de una cantidad</p></div>';
+            echo '<div class="aviso"><p>Por favor, asegúrese de haber seleccionado un origen y un destino para realziar el cambio, además de una cantidad...</p></div>';
             break;
         case '3':
-            echo '<div class="aviso><p>Por favor, únicamente introduzca números</p></div>';
+            echo '<div class="aviso"><p>Por favor, únicamente introduzca números</p></div>';
             break;
         default:
             break;
@@ -51,9 +51,9 @@ function intentosPrevios() {
 function mostrarResultado() {
     session_start();
     if (filter_input(INPUT_GET, 'cambio') == '2') {
-        echo '<p>' . $_SESSION['cantidad'] . " " . $_SESSION['from'] . ' son ' . $corta = substr($_SESSION['resultado'], 0, strpos($_SESSION['resultado'], '.') + 3) . ' ' . $_SESSION['to'] . '</p>';
+        echo '<div class="resultado"><p>' . $_SESSION['cantidad'] . " " . $_SESSION['from'] . ' son ' . $corta = substr($_SESSION['resultado'], 0, strpos($_SESSION['resultado'], '.') + 3) . ' ' . $_SESSION['to'] . '</p>';
         $desde = (time() - (new PDO('sqlite:./ftsi.db'))->query('SELECT FECHA FROM FECHA')->fetchColumn());
-        echo '<p>Valor de la moneda tomado última vez hace ' . $desde . ' segundos</p>';
+        echo '<p>Valor de la moneda tomado última vez hace ' . $desde . ' segundos</p></div>';
     }
     session_write_close();
 }

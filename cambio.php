@@ -2,8 +2,10 @@
 
 if (!filter_input(INPUT_POST, 'from') || !filter_input(INPUT_POST, 'to') || !filter_input(INPUT_POST, 'cantidad')) {
     header('Location: index.php?cambio=1');
+    exit(1);
 } else if (!ctype_digit(filter_input(INPUT_POST, 'cantidad'))) {
     header('Location: index.php?cambio=3');
+    exit(3);
 } else {
     $ultimaActualizacion = (new PDO('sqlite:./ftsi.db'))->query('SELECT FECHA FROM FECHA')->fetchColumn();
     if ((time() - $ultimaActualizacion) > 86400) {
@@ -11,6 +13,7 @@ if (!filter_input(INPUT_POST, 'from') || !filter_input(INPUT_POST, 'to') || !fil
     } else {
         realizarCambio();
         header('Location: index.php?cambio=2');
+        exit(0);
     }
 }
 

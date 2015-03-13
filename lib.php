@@ -12,6 +12,7 @@ class View{
         echo $html;
     }
     public static function end(){
+        echo '<a href=index.php><img src="logo.jpg"></img></a>';
         echo '</body>
 </html>';
     }
