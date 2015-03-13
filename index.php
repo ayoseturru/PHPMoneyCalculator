@@ -51,9 +51,18 @@ function intentosPrevios() {
 function mostrarResultado() {
     session_start();
     if (filter_input(INPUT_GET, 'cambio') == '2') {
+        $unidad = 'segundos';
         echo '<div class="resultado"><p>' . $_SESSION['cantidad'] . " " . $_SESSION['from'] . ' son ' . $corta = substr($_SESSION['resultado'], 0, strpos($_SESSION['resultado'], '.') + 3) . ' ' . $_SESSION['to'] . '</p>';
         $desde = (time() - (new PDO('sqlite:./ftsi.db'))->query('SELECT FECHA FROM FECHA')->fetchColumn());
-        echo '<p>Valor de la moneda tomado última vez hace ' . $desde . ' segundos</p></div>';
+        if($desde > 60) {
+            $desde = round($desde / 60);
+            $unidad = 'minutos';
+            if($desde > 60) {
+                $desde = round($desde / 60);
+                $unidad = 'horas';
+            }
+        }
+        echo '<p>Valor de la moneda tomado última vez hace ' . $desde . " $unidad</p></div>";
     }
     session_write_close();
 }
