@@ -2,11 +2,12 @@
 
 if (!filter_input(INPUT_POST, 'from') || !filter_input(INPUT_POST, 'to') || !filter_input(INPUT_POST, 'cantidad')) {
     header('Location: index.php?cambio=1');
-} else if(!ctype_digit(filter_input(INPUT_POST, 'cantidad'))){
+} else if (!ctype_digit(filter_input(INPUT_POST, 'cantidad'))) {
     header('Location: index.php?cambio=3');
 } else {
-    header('Location: index.php?cambio=2');
+    $ultimaActualizacion = (new PDO('sqlite:./ftsi.db'))->query('SELECT FECHA FROM FECHA')->fetchColumn();
     obtenerValores();
+    header('Location: index.php?cambio=2');
 }
 
 function obtenerValores() {
@@ -14,8 +15,8 @@ function obtenerValores() {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    
-    
+
+
     $data = curl_exec($ch);
     curl_close($ch);
 
@@ -44,18 +45,18 @@ function actualizar($nombres, $valor) {
     $_SESSION['fecha'] = $fecha;
     session_write_close();
     for ($i = 0; $i < count($nombres); $i++) {
-       $aux = $db->prepare('UPDATE VALORES SET valor=? where divisa=?');
-       $aux->execute(array($valor[$i], $nombres[$i]));
+        $aux = $db->prepare('UPDATE VALORES SET valor=? where divisa=?');
+        $aux->execute(array($valor[$i], $nombres[$i]));
     }
     $aux = $db->prepare('UPDATE VALORES SET valor=? where divisa=?');
     $aux->execute(array(1, "EUR"));
     realizarCambio();
 }
 
-
 function realizarCambio() {
     $bd = new PDO('sqlite:./ftsi.db');
     $from = (1 / ($bd->query('SELECT VALOR FROM VALORES WHERE DIVISA ="' . filter_input(INPUT_POST, 'from') . '"')->fetchColumn())) * filter_input(INPUT_POST, 'cantidad');
+    echo $from;
     $to = $bd->query('SELECT VALOR FROM VALORES WHERE DIVISA ="' . filter_input(INPUT_POST, 'to') . '"')->fetchColumn();
     $result = $from * $to;
     session_start();
