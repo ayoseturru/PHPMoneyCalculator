@@ -4,7 +4,7 @@ include_once 'lib.php';
 
 View::start('Conversor de moneda');
 echo '<h1>CONVERSOR DE MONEDA GRATUITO</h1>';
-echo "<a href='identificacion.php'>Acceso</a>";
+echo "<a href='divisas.php'>Ver todas las divisas</a>";
 intentosPrevios();
 echo formularioConversor();
 mostrarResultado();
@@ -38,10 +38,10 @@ function formularioConversor() {
 function intentosPrevios() {
     switch (filter_input(INPUT_GET, 'cambio')) {
         case '1':
-            echo '<p>Por favor, asegúrese de haber seleccionado un origen y un destino para realziar el cambio, además de una cantidad</p>';
+            echo '<div class="aviso"><p>Por favor, asegúrese de haber seleccionado un origen y un destino para realziar el cambio, además de una cantidad</p></div>';
             break;
         case '3':
-            echo '<p>Por favor, únicamente introduzca números</p>';
+            echo '<div class="aviso><p>Por favor, únicamente introduzca números</p></div>';
             break;
         default:
             break;
@@ -52,7 +52,7 @@ function mostrarResultado() {
     session_start();
     if (filter_input(INPUT_GET, 'cambio') == '2') {
         echo '<p>' . $_SESSION['cantidad'] . " " . $_SESSION['from'] . ' son ' . $corta = substr($_SESSION['resultado'], 0, strpos($_SESSION['resultado'], '.') + 3) . ' ' . $_SESSION['to'] . '</p>';
-        $desde = (time() - $_SESSION['fecha']);
+        $desde = (time() - (new PDO('sqlite:./ftsi.db'))->query('SELECT FECHA FROM FECHA')->fetchColumn());
         echo '<p>Valor de la moneda tomado última vez hace ' . $desde . ' segundos</p>';
     }
     session_write_close();

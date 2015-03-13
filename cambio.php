@@ -6,20 +6,26 @@ if (!filter_input(INPUT_POST, 'from') || !filter_input(INPUT_POST, 'to') || !fil
     header('Location: index.php?cambio=3');
 } else {
     $ultimaActualizacion = (new PDO('sqlite:./ftsi.db'))->query('SELECT FECHA FROM FECHA')->fetchColumn();
-    obtenerValores();
-    header('Location: index.php?cambio=2');
+    if ((time() - $ultimaActualizacion) > 86400) {
+        obtenerValores();
+    } else {
+        realizarCambio();
+        header('Location: index.php?cambio=2');
+    }
 }
 
 function obtenerValores() {
-    $url = 'http://api.fixer.io/latest';
+    $url = 'http://api.fixer.io/latestgfgfgf';
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-
     $data = curl_exec($ch);
+    
+    if(!$data) {
+        realizarCambio();
+    }
+    
     curl_close($ch);
-
     $arr1 = preg_split("[:|,|}]", $data);
     $arr1 = array_splice($arr1, 5);
     $arr1 = array_splice($arr1, 0, 62);
@@ -40,10 +46,7 @@ function obtenerValores() {
 
 function actualizar($nombres, $valor) {
     $db = new PDO('sqlite:./ftsi.db');
-    $fecha = time();
-    session_start();
-    $_SESSION['fecha'] = $fecha;
-    session_write_close();
+    $db->query('UPDATE FECHA SET FECHA=' . time());;
     for ($i = 0; $i < count($nombres); $i++) {
         $aux = $db->prepare('UPDATE VALORES SET valor=? where divisa=?');
         $aux->execute(array($valor[$i], $nombres[$i]));
@@ -56,7 +59,6 @@ function actualizar($nombres, $valor) {
 function realizarCambio() {
     $bd = new PDO('sqlite:./ftsi.db');
     $from = (1 / ($bd->query('SELECT VALOR FROM VALORES WHERE DIVISA ="' . filter_input(INPUT_POST, 'from') . '"')->fetchColumn())) * filter_input(INPUT_POST, 'cantidad');
-    echo $from;
     $to = $bd->query('SELECT VALOR FROM VALORES WHERE DIVISA ="' . filter_input(INPUT_POST, 'to') . '"')->fetchColumn();
     $result = $from * $to;
     session_start();
@@ -64,4 +66,5 @@ function realizarCambio() {
     $_SESSION['from'] = filter_input(INPUT_POST, 'from');
     $_SESSION['to'] = filter_input(INPUT_POST, 'to');
     $_SESSION['resultado'] = $result;
+    session_write_close();
 }
