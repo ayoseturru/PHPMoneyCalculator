@@ -52,8 +52,8 @@ function mostrarResultado() {
     session_start();
     if (filter_input(INPUT_GET, 'cambio') == '2') {
         echo '<p>' . $_SESSION['cantidad'] . " " . $_SESSION['from'] . ' son ' . $corta = substr($_SESSION['resultado'], 0, strpos($_SESSION['resultado'], '.') + 3) . ' ' . $_SESSION['to'] . '</p>';
+        $desde = (time() - $_SESSION['fecha']);
+        echo '<p>Valor de la moneda tomado última vez hace ' . $desde . ' segundos</p>';
     }
-    $desde = (time() - $_SESSION['fecha']);
-    echo '<p>Valor de la moneda tomado última vez hace ' . $desde . ' segundos</p>';
     session_write_close();
 }

@@ -44,11 +44,11 @@ function actualizar($nombres, $valor) {
     $_SESSION['fecha'] = $fecha;
     session_write_close();
     for ($i = 0; $i < count($nombres); $i++) {
-       $aux = $db->prepare('UPDATE VALORES SET fecha=?, valor=? where divisa=?');
-       $aux->execute(array($fecha,$valor[$i], $nombres[$i]));
+       $aux = $db->prepare('UPDATE VALORES SET valor=? where divisa=?');
+       $aux->execute(array($valor[$i], $nombres[$i]));
     }
-    $aux = $db->prepare('UPDATE VALORES SET fecha=?, valor=? where divisa=?');
-    $aux->execute(array($fecha,1, "EUR"));
+    $aux = $db->prepare('UPDATE VALORES SET valor=? where divisa=?');
+    $aux->execute(array(1, "EUR"));
     realizarCambio();
 }
 
