@@ -18,38 +18,39 @@ if (!filter_input(INPUT_POST, 'from') || !filter_input(INPUT_POST, 'to') || !fil
 }
 
 function obtenerValores() {
-    $url = 'http://api.fixer.io/latestgfgfgf';
+    $url = 'http://api.fixer.io/latest';
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $data = curl_exec($ch);
-    
-    if(!$data) {
-        realizarCambio();
-    }
-    
     curl_close($ch);
     $arr1 = preg_split("[:|,|}]", $data);
-    $arr1 = array_splice($arr1, 5);
-    $arr1 = array_splice($arr1, 0, 62);
-    $pos = 0;
-    $lugar = 0;
-    for ($i = 0; $i < 62; $i++) {
-        if ($i % 2 == 0) {
-            $nombres[$pos] = str_replace("\"", "", $arr1[$i]);
-            $pos = $pos + 1;
-        } else {
-            $valor[$lugar] = $arr1[$i] + 0.0;
-            $lugar = $lugar + 1;
+
+    if (count($arr1) < 50) {
+        realizarCambio();
+    } else {
+        $arr1 = array_splice($arr1, 5);
+        $arr1 = array_splice($arr1, 0, 62);
+        $pos = 0;
+        $lugar = 0;
+        for ($i = 0; $i < 62; $i++) {
+            if ($i % 2 == 0) {
+                $nombres[$pos] = str_replace("\"", "", $arr1[$i]);
+                $pos = $pos + 1;
+            } else {
+                $valor[$lugar] = $arr1[$i] + 0.0;
+                $lugar = $lugar + 1;
+            }
         }
+        $nombres[0] = str_replace("{", "", $nombres[0]);
+        actualizar($nombres, $valor);
     }
-    $nombres[0] = str_replace("{", "", $nombres[0]);
-    actualizar($nombres, $valor);
 }
 
 function actualizar($nombres, $valor) {
     $db = new PDO('sqlite:./ftsi.db');
-    $db->query('UPDATE FECHA SET FECHA=' . time());;
+    $db->query('UPDATE FECHA SET FECHA=' . time());
+    ;
     for ($i = 0; $i < count($nombres); $i++) {
         $aux = $db->prepare('UPDATE VALORES SET valor=? where divisa=?');
         $aux->execute(array($valor[$i], $nombres[$i]));
